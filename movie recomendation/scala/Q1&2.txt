@@ -1,0 +1,16 @@
+Q1:
+val users = sc.textFile("hdfs://localhost:9000/users.dat")
+val zipcode = "10023"
+val res1= users.filter(line =>line.split("::")(4) == zipcode)
+val res2 = res1.map(line=>line.split("::")(0))
+res2.collect()
+
+
+Q2:
+val ratings = sc.textFile("hdfs://localhost:9000/ratings.dat")
+val mr = ratings.map(line=>(line.split("::")(1),line.split("::")(2).toInt))
+val mavg = mr.mapValues((_, 1)).reduceByKey((x, y) => (x._1 + y._1, x._2 +y._2)).mapValues{ case (sum, count) => (1.0 * sum)/count}
+val sorted = mavg.map {
+  case(key, value) => (value, key); //exchange key and value
+}.sortByKey(false)
+val res = sorted.top(10)

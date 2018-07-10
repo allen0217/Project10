@@ -1,0 +1,8 @@
+CREATE TABLE m2009 (movieid int, moviename STRING,genres STRING);
+CREATE TABLE m2010 (movieid int, moviename STRING,genres STRING);
+CREATE TABLE m2011 (movieid int, moviename STRING,genres STRING);
+
+FROM MOVIES
+INSERT OVERWRITE TABLE m2009 select movieid,title,genres where year = 2009
+INSERT OVERWRITE TABLE m2010 select movieid,title,genres where year = 2010
+INSERT OVERWRITE TABLE m2011 select movieid,title,genres where year = 2011;

@@ -1,0 +1,4 @@
+DROP table if exists TEMP;
+CREATE TABLE TEMP as select distinct R.movieid,M.title,M.genres,R.avgrating from(select movieid, title, genres from MOVIE where genres like '%Action%' OR genres like '%Drama%') as M ,(select movieid, avg(rating) as avgrating from RATING group by movieid having avgrating between 4.4 AND 4.9) as R where M.movieid = R.movieid;
+
+select * from TEMP as T where not exists (select R.movieid from RATING as R, USER as U where T.movieid = R.movieid AND R.userid = U.userid AND U.gender = 'F');

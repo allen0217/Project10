@@ -1,0 +1,33 @@
+CREATE KEYSPACE zxt130430
+with placement_strategy = 'SimpleStrategy'
+and strategy_options = {replication_factor:1};
+
+USE zxt130430;
+
+CREATE COLUMN FAMILY movies
+WITH comparator = UTF8Type
+AND key_validation_class=UTF8Type
+AND column_metadata = [
+{column_name: movieid, validation_class: UTF8Type}
+{column_name: title, validation_class: UTF8Type}
+{column_name: genres, validation_class: UTF8Type}];
+
+SET movies['70']['movieid']='70';
+SET movies['70']['title']='From Dusk Till Dawn (1996)';
+SET movies['70']['genres']='Action|Comedy|Crime|Horror|Thriller';
+
+SET movies['83']['movieid']='83';
+SET movies['83']['title']='Once Upon a Time When We Were Colored (1995)';
+SET movies['83']['genres']='Drama';
+
+SET movies['112']['movieid']='112' WITH ttl=300;
+SET movies['112']['title']='Escape from New York (1981)' WITH ttl=300;
+SET movies['112']['genres']='Action|Adventure|Sci-Fi|Thriller' WITH ttl=300;
+
+GET movies['70']['title'];
+GET movies['70'];
+LIST movies;
+DEL movies['83']['genres'];
+DROP COLUMN FAMILY movies;
+
+describe zxt130430;

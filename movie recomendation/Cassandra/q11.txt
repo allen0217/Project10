@@ -1,0 +1,15 @@
+CREATE TABLE movies (
+	movieid int,
+	title varchar,
+	genres varchar,
+	PRIMARY KEY (movieid));
+
+COPY movies (movieid,title,genres) FROM '/tmp/Fall2014_HW-3_Hive/movies_new.dat' WITH DELIMITER='#';
+
+INSERT INTO movies (movieid,title,genres) VALUES (1162,'New Comedy Movie','Comedy');
+
+SELECT * FROM movies WHERE movieid = 1150;
+
+TRUNCATE movies;
+
+DROP TABLE movies;

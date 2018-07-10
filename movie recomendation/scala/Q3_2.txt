@@ -1,0 +1,50 @@
+1.
+val ratings = sc.textFile("hdfs://localhost:9000/ratings.dat")
+val userID = 7
+var movie4 = ratings.filter(line=>{val fileds = line.split("::")
+ fileds(0).toInt==userID && fileds(2)=="4"}).map(line=>line.split("::")(1))
+
+movie4.saveAsTextFile("hdfs://localhost:9000/hw5/q31res")
+
+2.
+val movie4 = sc.textFile("hdfs://localhost:9000/hw5/q31res").toArray()
+val matrix = sc.textFile("hdfs://localhost:9000/indicator-matrix")
+var temp = matrix.map({line=>line.replaceAll(":\\d+\\.*\\d+","").replaceAll(" ",", ")})
+var res2 = temp.filter({line=>movie4.contains(line.split("\t")(0))})
+res2.saveAsTextFile("hdfs://localhost:9000/hw5/q32res")
+
+res2.saveAsTextFile("/home/user/Bigdata/hw5/q32res")
+
+
+
+3.
+
+val movies = sc.textFile("hdfs://localhost:9000/movies.dat")
+val matrix = sc.textFile("hdfs://localhost:9000/hw5/q32res")
+
+var pairs = movies.map { line =>
+ val fileds = line.split("::")
+ (fileds(0), fileds(1))
+}.collectAsMap
+
+var broadCastMap = sc.broadcast(pairs)
+var m = broadCastMap.value; //save table1 as map, and broadcast it
+
+var res1 = matrix.map { line =>
+ val fileds = line.split("\t")
+ (fileds(0), fileds(1))
+}
+
+var res2 = res1.map{ case(key, value) =>{
+  var title=m.get(key).get
+  var recs = value.split(", ")
+  var vline =""
+  var l = recs.length
+  for ( i<- 1 to l-1){
+  vline += m.get(recs(i)).get+"_"+recs(i)+", "}
+  vline += m.get(recs(l-1)).get+"_"+recs(l-1)
+  (title+"_"+key, vline)}}
+
+res2.saveAsTextFile("hdfs://localhost:9000/hw5/q33res")
+
+res2.saveAsTextFile("/home/user/BigData/hw5/q33res")

@@ -1,0 +1,10 @@
+CREATE TABLE RATING (userid int, movieid STRING, rating int,timestamp STRING)ROW FORMAT DELIMITED FIELDS TERMINATED BY '#';
+LOAD DATA LOCAL INPATH '/tmp/Hive/ratings_new.dat' INTO TABLE RATING;
+
+CREATE TABLE USER (userid int, gender STRING, age int,occupation STRING, zipcode STRING)ROW FORMAT DELIMITED FIELDS TERMINATED BY '#';
+LOAD DATA LOCAL INPATH '/tmp/Hive/users_new.dat' INTO TABLE USER;
+
+CREATE TABLE MOVIE (movieid STRING, title STRING,genres STRING)ROW FORMAT DELIMITED FIELDS TERMINATED BY '#';
+LOAD DATA LOCAL INPATH '/tmp/Hive/movies_new.dat' INTO TABLE MOVIE;
+
+select A.movieid, B.title,B.genres,A.avgrating from (select movieid, avg(rating) as avgrating from RATING group by movieid )as A ,(select movieid, title, genres from MOVIE where genres like '%Action%') as B where A.movieid == B.movieid order by A.avgrating desc limit 10;  

@@ -1,0 +1,1 @@
+select title, FORMAT_GENRE(genres) from movie;

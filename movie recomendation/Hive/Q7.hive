@@ -1,0 +1,6 @@
+CREATE TABLE MOVIES (movieid int, title STRING,genres STRING) PARTITIONED BY (year int) ROW FORMAT DELIMITED FIELDS TERMINATED BY "#" ;  --; ascii = \073
+LOAD DATA LOCAL INPATH '/tmp/Data/partition/2009' INTO TABLE MOVIES PARTITION (year = 2009);
+LOAD DATA LOCAL INPATH '/tmp/Data/partition/2010' INTO TABLE MOVIES PARTITION (year = 2010);
+LOAD DATA LOCAL INPATH '/tmp/Data/partition/2011' INTO TABLE MOVIES PARTITION (year = 2011);
+
+select * from movies where year = 2009;
